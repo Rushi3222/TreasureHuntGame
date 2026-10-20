@@ -7,6 +7,8 @@
 #include "doormover.generated.h"
 
 
+
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TREASUREHUNT_API Udoormover : public UActorComponent
 {

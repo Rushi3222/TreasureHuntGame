@@ -36,6 +36,30 @@ AtreasureHuntCharacter::AtreasureHuntCharacter()
 	//Mesh1P->SetRelativeRotation(FRotator(0.9f, -19.19f, 5.2f));
 	Mesh1P->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
 
+	//flashlight code
+
+
+	// Create flashlight
+	FlashLight = CreateDefaultSubobject<USpotLightComponent>(
+		TEXT("FlashLight"));
+
+	// Attach to the player's camera
+	FlashLight->SetupAttachment(FirstPersonCameraComponent);
+
+	// Position and direction
+	FlashLight->SetRelativeLocation(FVector(20.f, 0.f, 0.f));
+	FlashLight->SetRelativeRotation(FRotator::ZeroRotator);
+
+	// Light settings
+	FlashLight->SetIntensity(5000.0f);
+	FlashLight->SetAttenuationRadius(1500.0f);
+	FlashLight->SetInnerConeAngle(20.0f);
+	FlashLight->SetOuterConeAngle(35.0f);
+
+	// Start OFF
+	bFlashLightOn = false;
+	FlashLight->SetVisibility(false);
+
 }
 
 void AtreasureHuntCharacter::BeginPlay()
@@ -64,13 +88,42 @@ void AtreasureHuntCharacter::SetupPlayerInputComponent(UInputComponent* PlayerIn
 		//intreact
 		EnhancedInputComponent->BindAction(IntreactAction, ETriggerEvent::Started, this, &AtreasureHuntCharacter::Intreact);
 		
+		EnhancedInputComponent->BindAction(
+			FlashlightAction,
+			ETriggerEvent::Started,
+			this,
+			&AtreasureHuntCharacter::ToggleFlashLight
+		);
 		
 	}
 	else
 	{
 		UE_LOG(LogTemplateCharacter, Error, TEXT("'%s' Failed to find an Enhanced Input Component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
 	}
+
+	
 }
+
+void AtreasureHuntCharacter::ToggleFlashLight()
+{
+	if (FlashLight == nullptr)
+	{
+		return;
+	}
+
+	bFlashLightOn = !bFlashLightOn;
+
+	FlashLight->SetVisibility(bFlashLightOn);
+
+	UE_LOG(
+		LogTemp,
+		Display,
+		TEXT("Flashlight is %s"),
+		bFlashLightOn ? TEXT("ON") : TEXT("OFF")
+	);
+}
+
+
 
 void AtreasureHuntCharacter::Intreact()
 {

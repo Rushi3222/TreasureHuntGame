@@ -1,10 +1,12 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
+
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
+#include "Components/SpotLightComponent.h"
 #include "treasureHuntCharacter.generated.h"
 
 class UInputComponent;
@@ -74,6 +76,22 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	float MaxInteractionDistance = 500.f;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Flashlight",
+		meta = (AllowPrivateAccess = "true"))
+	USpotLightComponent* FlashLight;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Flashlight")
+	bool bFlashLightOn = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input",
+		meta = (AllowPrivateAccess = "true"))
+	UInputAction* FlashlightAction;
+
+	UFUNCTION()
+	void ToggleFlashLight();
+
+	
 
 };
 
